@@ -23,8 +23,9 @@ public class Main {
 				String tmp = x.recording + "_mux.mkv";
 
 				ProcessBuilder p = new ProcessBuilder(mkvmerge, "-o", tmp, x.recording); 	// run mkvmerge
+				p.inheritIO();
 				Process pr = p.start();
-				printOutput(pr.getInputStream(), x.recording);
+				pr.waitFor();
 
 				System.out.println("---Muxing Complete!---");
 
@@ -44,9 +45,10 @@ public class Main {
 
 				Thread.sleep(2000);
 
-				p = new ProcessBuilder(comskip, x.recording);	// run comskip
-				pr = p.start();
-				printOutput(pr.getInputStream(), x.recording);
+				ProcessBuilder pz = new ProcessBuilder(comskip, x.recording);	// run comskip
+				pz.inheritIO();
+				Process prz = pz.start();
+				prz.waitFor();
 
 				System.out.println("---Muxing Complete!---");
 
@@ -103,16 +105,7 @@ public class Main {
 	}
 
 
-	public static void printOutput(InputStream in, String s) throws Exception {
 
-		BufferedReader r = new BufferedReader(new InputStreamReader(in));
-
-		String line = null;
-		while ((line = r.readLine()) != null) {
-			System.out.println(line);
-			// System.out.println("Currently processing: " + s);
-		}
-	}
 
 
 
@@ -133,4 +126,14 @@ try {
 */
 
 
-// scann all directories
+
+/*	public static void printOutput(InputStream in, String s) throws Exception {
+
+		BufferedReader r = new BufferedReader(new InputStreamReader(in));
+
+		String line = null;
+		while ((line = r.readLine()) != null) {
+			System.out.println(line);
+			// System.out.println("Currently processing: " + s);
+		}
+	}*/
