@@ -7,13 +7,12 @@ public class Main {
 	static HashSet<Recording> recs = new HashSet<Recording>();
 	static String comskip = "\"C:\\Program Files (x86)\\Comskip\\comskip.exe\"";
 	static String mkvmerge = "\"C:\\Program Files\\MKVToolNix\\mkvmerge.exe\"";
-	// static String mkvmerge = "\"C:\\Program Files\\MKVToolNix\\mmg.exe\"";
 
 
 	public static void main(String[] args) throws Exception {
 
 		// File[] root = new File("P:\\").listFiles();
-		File[] root = new File("E:\\comskiptest\\testcase\\").listFiles();
+		File[] root = new File("P:\\").listFiles();
 
 		walk(root);
 
@@ -55,7 +54,7 @@ public class Main {
 				String d = x.recording.substring(0, x.recording.lastIndexOf('\\') + 1);
 				File comskipout = new File(m + ".vdr");
 				File marks = new File(d + "marks");
-				if (!marks.exists()) {
+				if (!marks.exists()) {	// don't replace marks file if exists
 					comskipout.renameTo(marks);
 				}
 
@@ -65,7 +64,11 @@ public class Main {
 
 		}
 
-		System.out.println(recs.size());
+		System.out.println("------------------");
+	
+		for (Recording x : recs) {
+			System.out.println("Processed" + x.recording);
+		}
 
 	}
 
@@ -78,8 +81,10 @@ public class Main {
 				String x = f.toString();
 				if (x.endsWith(".ts") && checkTime(f)) {
 					File tmp = new File(x.replace(".ts", ".log"));
-					Recording r = new Recording(x, tmp.exists());
-					recs.add(r);
+					if (!tmp.exists()) {
+						Recording r = new Recording(x);
+						recs.add(r);
+					}
 				}
 			}
 		}
