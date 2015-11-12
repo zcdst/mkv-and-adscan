@@ -75,7 +75,8 @@ public class Main {
 
 	public static void walk(File[] root) {
 		for (File f : root) {
-			if (f.isDirectory()) {
+			String fs = f.toString();
+			if (f.isDirectory() && !fs.contains(".del")) {
 				walk(f.listFiles());
 			} else {
 				String x = f.toString();
@@ -96,6 +97,7 @@ public class Main {
 		if (System.currentTimeMillis() - f.lastModified() > 300000) {
 			return true;
 		} else {
+			// return true;
 			return false;
 		}
 	}
