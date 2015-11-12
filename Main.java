@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Main{
+public class Main {
 
 
 	static HashSet<Recording> recs = new HashSet<Recording>();
@@ -22,9 +22,9 @@ public class Main{
 			if (!x.processed) {	// remux the file
 				System.out.println("Re-muxing: " + x.recording);
 				String tmp = x.recording + "_mux.mkv";
-				ProcessBuilder p = new ProcessBuilder(mkvmerge, "-o", tmp, x.recording); 
-				Process pr = p.start();
 
+				ProcessBuilder p = new ProcessBuilder(mkvmerge, "-o", tmp, x.recording); 	// run mkvmerge
+				Process pr = p.start();
 				printOutput(pr.getInputStream(), x.recording);
 
 				System.out.println("---Muxing Complete!---");
@@ -32,42 +32,34 @@ public class Main{
 				File o = new File(x.recording);
 				File n = new File(tmp);
 
-				if (n.length() > 0.75 * o.length()) {
+				if (n.length() > 0.75 * o.length()) {	// check if muxed correctly
 					System.out.println("Output seems OK, deleting " + x.recording + " !");
 				} else {
 					n.delete();
 					continue;
 				}
 
-				o.delete();
-
+				o.delete();	// delete original file, rename muxed mkv to original ts
 				Thread.sleep(2000);
-
 				n.renameTo(new File(x.recording));
 
-
 				Thread.sleep(2000);
 
-				p = new ProcessBuilder(comskip, x.recording);
+				p = new ProcessBuilder(comskip, x.recording);	// run comskip
 				pr = p.start();
-
 				printOutput(pr.getInputStream(), x.recording);
 
-				String m = x.recording.substring(0, x.recording.lastIndexOf('.'));
+				System.out.println("---Muxing Complete!---");
+
+				String m = x.recording.substring(0, x.recording.lastIndexOf('.'));	// rename vdr file
 				String d = x.recording.substring(0, x.recording.lastIndexOf('\\') + 1);
 				File comskipout = new File(m + ".vdr");
 				File marks = new File(d + "marks");
-
-
 				if (!marks.exists()) {
 					comskipout.renameTo(marks);
 				}
 
 
-
-
-				System.out.println("below--");
-				System.out.println(d);
 
 			}
 
