@@ -28,7 +28,7 @@ public class Main {
 		int count = 1;
 		for (Recording x : recs) {
 			System.out.println("------Re-muxing!-------");
-			System.out.println("File " + count + " of " + (recs.size() + 1));
+			System.out.println("File " + count + " of " + (recs.size()));
 			System.out.println("Re-muxing: " + x.recording);
 			String tmp = x.recording + "_mux.mkv";
 
@@ -62,7 +62,7 @@ public class Main {
 			mkp.waitFor();
 
 			System.out.println("------Scanning for ads!------");
-			System.out.println("File " + count + " of " + (recs.size() + 1));
+			System.out.println("File " + count + " of " + (recs.size()));
 			System.out.println("Scanning: " + x.recording);
 
 			String m = x.recording.substring(0, x.recording.lastIndexOf('.'));	// rename vdr file
