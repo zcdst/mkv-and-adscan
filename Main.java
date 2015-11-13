@@ -8,11 +8,17 @@ public class Main {
 	static final String COMSKIP = "\"C:\\Program Files (x86)\\Comskip\\comskip.exe\"";
 	static final String MKVMERGE = "\"C:\\Program Files\\MKVToolNix\\mkvmerge.exe\"";
 	static final String DIR = "P:\\";
+	static boolean force = false;	// when true, does not exit program when a "recently modified" recording is found
 
 
 	public static void main(String[] args) throws Exception {
 
-		// File[] root = new File("P:\\").listFiles();
+
+		if (args.length > 0 && args[0].contains("force")) {
+			force = true;
+		}
+
+
 		File[] root = new File(DIR).listFiles();
 
 		walk(root);
@@ -20,7 +26,7 @@ public class Main {
 		int count = 1;
 		for (Recording x : recs) {
 			System.out.println("------Re-muxing!-------");
-			System.out.println("File " + count + " of " + recs.size());
+			System.out.println("File " + count + " of " + (recs.size() + 1));
 			System.out.println("Re-muxing: " + x.recording);
 			String tmp = x.recording + "_mux.mkv";
 
@@ -53,7 +59,7 @@ public class Main {
 			mkp.waitFor();
 
 			System.out.println("------Scanning for ads!------");
-			System.out.println("File " + count + " of " + recs.size());
+			System.out.println("File " + count + " of " + (recs.size() + 1));
 			System.out.println("Scanning: " + x.recording);
 
 			String m = x.recording.substring(0, x.recording.lastIndexOf('.'));	// rename vdr file
@@ -100,8 +106,11 @@ public class Main {
 	public static boolean checkTime(File f) {		// true if file has not been written to in last 5 min
 		if (System.currentTimeMillis() - f.lastModified() > 300000) {
 			return true;
+		} else if (force) {	// ignore this recording, but continue adding others
+			return false;
 		} else {
-			// return true;
+			System.out.println("Recording in progress or recently completed... aborting!");
+			System.exit(-1);
 			return false;
 		}
 	}
