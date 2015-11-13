@@ -10,6 +10,8 @@ public class Main {
 	static final String DIR = "P:\\";
 	static boolean force = false;	// when true, does not exit program when a "recently modified" recording is found
 
+	Set<String> ignore = new HashSet<String>(Arrays.asList("a", "b"));
+
 
 	public static void main(String[] args) throws Exception {
 
@@ -19,7 +21,7 @@ public class Main {
 		}
 
 
-		File[] root = new File(DIR).listFiles();
+		File[] root = new File("P:\\").listFiles();
 
 		walk(root);
 
@@ -40,9 +42,10 @@ public class Main {
 			File o = new File(x.recording);
 			File n = new File(tmp);
 
-			if (n.length() > 0.75 * o.length()) {	// check if muxed correctly
+			if (n.length() > 0.5 * o.length()) {	// check if muxed correctly
 				System.out.println("Output seems OK, deleting " + x.recording + " !");
 			} else {
+				System.out.println("Output too small, deleting muxed file!");
 				n.delete();
 				continue;
 			}
@@ -109,9 +112,10 @@ public class Main {
 		} else if (force) {	// ignore this recording, but continue adding others
 			return false;
 		} else {
-			System.out.println("Recording in progress or recently completed... aborting!");
-			System.exit(-1);
-			return false;
+			// System.out.println("Recording in progress or recently completed... aborting!");
+			// System.exit(-1);
+			// return false;
+			return true;
 		}
 	}
 
