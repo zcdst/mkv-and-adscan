@@ -127,6 +127,7 @@ public class Main {
 		}
 		if (end) {
 			recs.clear();
+			end = false;
 		}
 	}
 
