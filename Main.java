@@ -64,6 +64,10 @@ public class Main {
 					Thread.sleep(2000);
 					n.renameTo(new File(x.recording));
 
+					System.out.println("------Scanning for ads!------");
+					System.out.println("File " + count + " of " + (recs.size()));
+					System.out.println("Scanning: " + x.recording);
+
 					Thread.sleep(2000);
 
 					ProcessBuilder mkpb = new ProcessBuilder(COMSKIP, x.recording);	// run comskip
@@ -71,9 +75,7 @@ public class Main {
 					Process mkp = mkpb.start();
 					mkp.waitFor();
 
-					System.out.println("------Scanning for ads!------");
-					System.out.println("File " + count + " of " + (recs.size()));
-					System.out.println("Scanning: " + x.recording);
+
 
 					String m = x.recording.substring(0, x.recording.lastIndexOf('.'));	// rename vdr file
 					String d = x.recording.substring(0, x.recording.lastIndexOf('\\') + 1);
@@ -93,7 +95,7 @@ public class Main {
 				// System.exit(-1);
 			}
 
-			System.out.println("------------------");
+			System.out.println("----------Done----------");
 		
 			for (Recording x : recs) {
 				System.out.println("Processed: " + x.recording);
