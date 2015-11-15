@@ -105,9 +105,9 @@ public class Main {
 			if (background) {
 				recs.clear();
 				long sleeptime;
-				if (activerec) {
+				if (activerec || Kodi.isPlaying()) {
 					sleeptime = 360000;
-					System.out.println("Trying again in 6 minutes...");
+					System.out.println("Recording/Playing at the moment, trying again in 6 minutes...");
 				} else {
 					sleeptime = Kodi.waitTime();
 					System.out.println("Nothing to do till next recording, in: " + (sleeptime / 1000.0 / 60 / 60) + " hours");
