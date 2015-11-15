@@ -30,12 +30,13 @@ public class Main {
 		do {
 
 			File[] root = new File(DIR).listFiles();
+			activerec = false;
 
 			walk(root);
 
 			int count = 1;
 
-			if (recs.size() > 0 && !Kodi.isPlaying()) {
+			if (recs.size() > 0 && !(Kodi.isPlaying())) {
 				for (Recording x : recs) {
 					System.out.println("------Re-muxing!-------");
 					System.out.println("File " + count + " of " + (recs.size()));
@@ -139,7 +140,6 @@ public class Main {
 		
 		if (activerec) {	// if any active recording found, empty queue
 			recs.clear();
-			activerec = false;
 		}
 	}
 
