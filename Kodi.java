@@ -55,7 +55,7 @@ public class Kodi {
 		JSONObject jsobject = new JSONObject();
 		JSONObject p = new JSONObject();
 
-		p.put("timerid", 1);
+		p.put("timerid", getTimerId());
 		jsobject.put("jsonrpc", "2.0");
 		jsobject.put("id", 1);
 		jsobject.put("method", "PVR.GetTimerDetails");
@@ -84,6 +84,38 @@ public class Kodi {
 		Date d = df.parse(strang);
 		long epoch = d.getTime();
 		return epoch - System.currentTimeMillis() + 3300000;
+
+	}
+
+
+	public static int getTimerId() throws Exception {
+
+		JSONObject js = new JSONObject();
+		JSONObject p = new JSONObject();
+
+		js.put("jsonrpc", "2.0");
+		js.put("id", 1);
+		js.put("method", "PVR.GetTimers");
+
+		Socket client = new Socket(hostname, port);
+
+		Writer w = new OutputStreamWriter(client.getOutputStream());
+		// Scanner sc = new Scanner(client.getInputStream());
+		BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+		js.write(w);
+		w.flush();
+
+		char x;
+		StringBuilder str = new StringBuilder();
+		while ((x = (char) in.read()) != ']') {
+			str.append(x);
+		}
+
+		client.close();
+		String strang = str.toString();
+		int y = strang.indexOf("\"timerid\":") + 10;
+		strang = strang.substring(y, y + 2);
+		return Integer.parseInt(strang);
 
 	}
 
