@@ -9,7 +9,7 @@ public class Main {
 	static final String MKVMERGE = "\"C:\\Program Files\\MKVToolNix\\mkvmerge.exe\"";
 	static final String DIR = "P:\\";
 	static boolean force = false;	// default behaviour is to do nothing if a recording is active; setting this to true ignores active recordings
-	static boolean end = false;
+	static boolean activerec = false;
 	static boolean background = false;
 
 	Set<String> ignore = new HashSet<String>(Arrays.asList("a", "b"));
@@ -35,7 +35,7 @@ public class Main {
 
 			int count = 1;
 
-			if (recs.size() > 0) {
+			if (recs.size() > 0 && !Kodi.isPlaying()) {
 				for (Recording x : recs) {
 					System.out.println("------Re-muxing!-------");
 					System.out.println("File " + count + " of " + (recs.size()));
@@ -88,11 +88,12 @@ public class Main {
 					count++;
 
 				}
-			} else if (end) {
+			} else if (activerec) {
 				System.out.println("Recording in progress (or recently completed)... aborting!");
+			} else if (Kodi.isPlaying()) {
+				System.out.println("PVR playback in progress!");
 			} else {
 				System.out.println("No recordings to process!");
-				// System.exit(-1);
 			}
 
 			System.out.println("----------Done----------");
@@ -103,8 +104,16 @@ public class Main {
 
 			if (background) {
 				recs.clear();
-				System.out.println("Re-starting in 10 minutes...");
-				Thread.sleep(900000);
+				long sleeptime;
+				if (activerec) {
+					sleeptime = 360000;
+					System.out.println("Trying again in 6 minutes...");
+				} else {
+					sleeptime = Kodi.waitTime();
+					System.out.println("Nothing to do till next recording, in: " + (sleeptime / 1000.0 / 60 / 60) + " hours");
+				}
+
+				Thread.sleep(sleeptime);
 			}
 		} while (background);
 
@@ -127,9 +136,10 @@ public class Main {
 				}
 			}
 		}
-		if (end) {
+		
+		if (activerec) {	// if any active recording found, empty queue
 			recs.clear();
-			end = false;
+			activerec = false;
 		}
 	}
 
@@ -142,7 +152,7 @@ public class Main {
 			return false;
 		} else {
 			// System.exit(-1);
-			end = true;
+			activerec = true;
 			return false;
 		}
 	}
