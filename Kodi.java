@@ -114,7 +114,7 @@ public class Kodi {
 		client.close();
 		String strang = str.toString();
 		int y = strang.indexOf("\"timerid\":") + 10;
-		strang = strang.substring(y, y + 2);
+		strang = strang.substring(y, strang.indexOf('}', y));
 		return Integer.parseInt(strang);
 
 	}
