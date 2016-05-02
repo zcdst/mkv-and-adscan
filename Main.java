@@ -11,6 +11,7 @@ public class Main {
 	static boolean force = false;	// default behaviour is to do nothing if a recording is active; setting this to true ignores active recordings
 	static boolean activerec = false;
 	static boolean background = false;
+	static boolean mux_only = false;
 
 	Set<String> ignore = new HashSet<String>(Arrays.asList("a", "b"));
 
@@ -19,11 +20,21 @@ public class Main {
 
 
 		if (args.length > 0) {
+		 	if (Arrays.asList(args).contains("-h")) {
+				System.out.println("Commands:");
+				System.out.println("-force: Ignore time last modified of recordings");
+				System.out.println("-mux-only: Just mux, no comskip");
+				System.out.println("-background: Run in background, process new recordings as they appear");
+				System.exit(0);
+			} 
 		 	if (Arrays.asList(args).contains("-force")) {
 				force = true;
 			} 
 			if (Arrays.asList(args).contains("-background")) {
 				background = true;
+			}
+			if (Arrays.asList(args).contains("-mux-only")) {
+				mux_only = true;
 			}
 		}
 
@@ -68,7 +79,7 @@ public class Main {
 
 
 
-					if (Arrays.asList(args).contains("-mux-only")) {
+					if (mux_only) {
 						String d = x.recording.substring(0, x.recording.lastIndexOf('.'));
 						File m = new File(d + ".muxed");
 						m.createNewFile();
