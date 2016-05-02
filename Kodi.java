@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 
 public class Kodi {
 
-	static String hostname = "192.168.1.61";
+	static String hostname = "192.168.1.120";
 	static int port = 9090;
 
 	static String matcher = ".+\"label\":\"\\d\\d\\d\\d\\.\\d\\d\\.\\d\\d-\\d\\d:\\d\\d.+";

@@ -19,9 +19,10 @@ public class Main {
 
 
 		if (args.length > 0) {
-		 	if (args[0].contains("force")) {
+		 	if (Arrays.asList(args).contains("-force")) {
 				force = true;
-			} else if (args[0].contains("background")) {
+			} 
+			if (Arrays.asList(args).contains("-background")) {
 				background = true;
 			}
 		}
@@ -65,26 +66,36 @@ public class Main {
 					Thread.sleep(2000);
 					n.renameTo(new File(x.recording));
 
-					System.out.println("------Scanning for ads!------");
-					System.out.println("File " + count + " of " + (recs.size()));
-					System.out.println("Scanning: " + x.recording);
-
-					Thread.sleep(2000);
-
-					ProcessBuilder mkpb = new ProcessBuilder(COMSKIP, x.recording);	// run comskip
-					mkpb.inheritIO();
-					Process mkp = mkpb.start();
-					mkp.waitFor();
 
 
+					if (Arrays.asList(args).contains("-mux-only")) {
+						String d = x.recording.substring(0, x.recording.lastIndexOf('.'));
+						File m = new File(d + ".muxed");
+						m.createNewFile();
 
-					String m = x.recording.substring(0, x.recording.lastIndexOf('.'));	// rename vdr file
-					String d = x.recording.substring(0, x.recording.lastIndexOf('\\') + 1);
-					File comskipout = new File(m + ".vdr");
-					File marks = new File(d + "marks");
-					if (!marks.exists()) {	// don't replace marks file if exists
-						comskipout.renameTo(marks);
+					} else {
+
+						System.out.println("------Scanning for ads!------");
+						System.out.println("File " + count + " of " + (recs.size()));
+						System.out.println("Scanning: " + x.recording);
+
+						Thread.sleep(2000);
+
+						ProcessBuilder mkpb = new ProcessBuilder(COMSKIP, x.recording);	// run comskip
+						mkpb.inheritIO();
+						Process mkp = mkpb.start();
+						mkp.waitFor();
+
+						String m = x.recording.substring(0, x.recording.lastIndexOf('.'));	// rename vdr file
+						String d = x.recording.substring(0, x.recording.lastIndexOf('\\') + 1);
+						File comskipout = new File(m + ".vdr");
+						File marks = new File(d + "marks");
+						if (!marks.exists()) {	// don't replace marks file if exists
+							comskipout.renameTo(marks);
+						}
+
 					}
+
 
 					count++;
 
@@ -129,8 +140,9 @@ public class Main {
 			} else {
 				String x = f.toString();
 				if (x.endsWith(".ts") && checkTime(f)) {
-					File tmp = new File(x.replace(".ts", ".log"));
-					if (!tmp.exists()) {
+					File tmp = new File(x.replace(".ts", ".muxed"));
+					File tmp2 = new File(x.replace(".ts", ".log"));
+					if (!tmp.exists() && !tmp2.exists()) {
 						Recording r = new Recording(x);
 						recs.add(r);
 					}
