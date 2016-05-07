@@ -12,6 +12,7 @@ public class Main {
 	static boolean activerec = false;
 	static boolean background = false;
 	static boolean mux_only = false;
+	static boolean list = false;
 
 	Set<String> ignore = new HashSet<String>(Arrays.asList("a", "b"));
 
@@ -26,6 +27,9 @@ public class Main {
 				System.out.println("-mux-only: Just mux, no comskip");
 				System.out.println("-background: Run in background, process new recordings as they appear");
 				System.exit(0);
+			} 
+		 	if (Arrays.asList(args).contains("-list")) {
+				list = true;
 			} 
 		 	if (Arrays.asList(args).contains("-force")) {
 				force = true;
@@ -47,6 +51,14 @@ public class Main {
 			walk(root);
 
 			int count = 1;
+
+			if (list) {
+				System.out.println(recs.size() + " Recordings to process:");
+				for (Recording x : recs) {
+					System.out.println(x.recording);
+				}
+				System.exit(0);
+			} 
 
 			if (recs.size() > 0 && !(Kodi.isPlaying())) {
 				for (Recording x : recs) {
